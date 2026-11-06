@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gorongosa Disruption Model Slide Canvas</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slideGreen: '#E2EFDA',
+                        slideGreenHeader: '#C6E0B4',
+                        slideGreenText: '#274E13',
+                        slideDarkText: '#2C3E50',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAF9;
+            color: #2C3E50;
+        }
+
+        /* Slide presentation shadow effect */
+        .slide-card {
+            background-color: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Print styles for saving clean PDF reports */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            .slide-card {
+                box-shadow: none !important;
+                border: 1px solid #CBD5E1 !important;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between antialiased text-slate-800">
+
+    <!-- TOP NAV / ACTION BAR -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm no-print">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+            <!-- App Title -->
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-lg">🌿</div>
+                <h1 class="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+                    Gorongosa Ecosystem Disruption Annotator
+                </h1>
+            </div>
+
+            <!-- Action Controls -->
+            <div class="flex items-center gap-2">
+                <div id="saveStatus" class="text-[11px] font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-md flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span>Auto-saved</span>
+                </div>
+                <button onclick="openExportModal()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs px-3.5 py-1.5 rounded-lg transition shadow-sm flex items-center gap-1">
+                    📋 Export / Submit
+                </button>
+                <button onclick="confirmReset()" class="bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 border border-slate-200 text-xs px-2.5 py-1.5 rounded-lg transition">
+                    Reset
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN SLIDE CANVAS WRAPPER -->
+    <main class="max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 space-y-6 flex-grow">
+
+        <!-- DISRUPTION SCENARIO NAVIGATION TABS -->
+        <section class="no-print">
+            <div class="flex flex-wrap sm:flex-nowrap gap-2 bg-slate-200/70 p-1.5 rounded-xl border border-slate-300" role="tablist">
+                <!-- Tab 1: War -->
+                <button id="tab-war" onclick="switchScenario('war')" role="tab" class="w-full py-2.5 px-4 rounded-lg font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2">
+                    <span>🪖</span> 1. Civil War
+                </button>
+                <!-- Tab 2: Drought -->
+                <button id="tab-drought" onclick="switchScenario('drought')" role="tab" class="w-full py-2.5 px-4 rounded-lg font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2">
+                    <span>☀️</span> 2. Seasonal Drought
+                </button>
+                <!-- Tab 3: Tourism -->
+                <button id="tab-tourism" onclick="switchScenario('tourism')" role="tab" class="w-full py-2.5 px-4 rounded-lg font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2">
+                    <span>📷</span> 3. Eco-Tourism
+                </button>
+            </div>
+        </section>
+
+        <!-- ACTIVE DISRUPTION INFORMATION CARD (SLIDE LOOK) -->
+        <section id="scenarioCard" class="slide-card rounded-2xl overflow-hidden">
+            <!-- Dynamic Content Injected Here by JavaScript -->
+        </section>
+
+        <!-- INTERACTIVE TROPHIC LEVEL DATA TABLE -->
+        <section class="slide-card rounded-2xl overflow-hidden border border-slate-200">
+            <div class="bg-[#E2EFDA] px-5 py-3 border-b border-[#C6E0B4] flex items-center justify-between">
+                <h2 class="font-bold text-emerald-950 text-sm sm:text-base flex items-center gap-2">
+                    <span>📊</span> Food Web & Trophic Level Disruption Matrix
+                </h2>
+                <span class="text-xs text-emerald-800 font-semibold bg-white/70 px-2.5 py-1 rounded border border-[#C6E0B4]">
+                    Add + or - then type your reasoning
+                </span>
+            </div>
+
+            <!-- Table Container -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-100 text-slate-700 text-xs font-bold uppercase border-b border-slate-200">
+                            <th scope="col" class="py-3 px-4 w-1/4 min-w-[180px]">Trophic Level</th>
+                            <th scope="col" class="py-3 px-4 w-1/5 min-w-[170px]">Impact (+ / −)</th>
+                            <th scope="col" class="py-3 px-4 w-1/2 min-w-[280px]">Student Explanation & Reasoning</th>
+                        </tr>
+                    </thead>
+                    <tbody id="trophicTableBody" class="divide-y divide-slate-200 text-xs sm:text-sm">
+                        <!-- Table Rows Injected Here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-200 text-slate-500 text-xs py-4 no-print mt-8">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <p>© Gorongosa National Park Ecosystem Disruption Modeling</p>
+            <div class="flex items-center gap-4 font-semibold text-emerald-700">
+                <button onclick="openExportModal()" class="hover:underline">Copy Summary for Canvas</button>
+                <button onclick="triggerPrint()" class="hover:underline">Print / Save PDF</button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- CANVAS EXPORT & SUMMARY MODAL -->
+    <div id="exportModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden no-print">
+        <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[85vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
+            <!-- Modal Header -->
+            <div class="bg-[#E2EFDA] text-emerald-950 px-6 py-4 flex items-center justify-between border-b border-[#C6E0B4]">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">📋</span>
+                    <div>
+                        <h3 class="font-bold text-base sm:text-lg">Student Disruption Model Summary</h3>
+                        <p class="text-xs text-emerald-800">Ready for Canvas LMS Submission</p>
+                    </div>
+                </div>
+                <button onclick="closeExportModal()" class="text-slate-500 hover:text-slate-800 text-2xl font-bold leading-none">&times;</button>
+            </div>
+
+            <!-- Modal Content -->
+            <div id="reportContent" class="p-6 overflow-y-auto flex-grow space-y-4 bg-slate-50 text-xs sm:text-sm">
+                <!-- Injected via JS -->
+            </div>
+
+            <!-- Modal Actions -->
+            <div class="bg-white border-t border-slate-200 px-6 py-3.5 flex flex-wrap items-center justify-between gap-3">
+                <span class="text-xs text-slate-500">Paste copied text into your Canvas text box submission.</span>
+                <div class="flex items-center gap-2">
+                    <button onclick="copyReportText()" class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs px-4 py-2 rounded-lg transition shadow-sm">
+                        Copy Summary for Canvas
+                    </button>
+                    <button onclick="triggerPrint()" class="bg-slate-700 hover:bg-slate-800 text-white font-semibold text-xs px-4 py-2 rounded-lg transition">
+                        Print / PDF
+                    </button>
+                    <button onclick="closeExportModal()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs px-3 py-2 rounded-lg transition">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOM CONFIRMATION DIALOG (NO ALERT/CONFIRM) -->
+    <div id="confirmModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden no-print">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-5 shadow-2xl border border-slate-200 space-y-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-xl font-bold">⚠️</div>
+                <div>
+                    <h4 class="font-bold text-slate-900 text-sm">Reset All Predictions?</h4>
+                    <p class="text-xs text-slate-500">This will clear all typed responses and + / − tags across all 3 scenarios.</p>
+                </div>
+            </div>
+            <div class="flex items-center justify-end gap-2 pt-2">
+                <button onclick="closeConfirmModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3 py-1.5 rounded-lg">Cancel</button>
+                <button onclick="executeReset()" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold px-3.5 py-1.5 rounded-lg shadow-sm">Reset Everything</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toastContainer" class="fixed bottom-4 right-4 z-50 pointer-events-none no-print"></div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        /**
+         * DISRUPTION SCENARIOS DATA
+         */
+        const SCENARIOS = {
+            war: {
+                id: 'war',
+                name: 'War (1977–1992)',
+                badge: 'Civil Disruption Scenario',
+                icon: '🪖',
+                cardText: 'A civil war raged from 1977 to 1992 in the Gorongosa region. Battles, violent raids on villages, and massacres occurred throughout the country, including in the park and around Mount Gorongosa. Soldiers and farmers decimated the populations of large animals, like lion, elephant, zebra, buffalo, and wildebeest, destroying their habitat and hunting them for food.',
+                bgHeader: 'bg-amber-100 text-amber-900 border-amber-300'
+            },
+            drought: {
+                id: 'drought',
+                name: 'Seasonal Drought',
+                badge: 'Climate Disruption Scenario',
+                icon: '☀️',
+                cardText: 'Annual cycles of flood and drought shape the flora and fauna of Gorongosa National Park. During the dry months of July through September, the rivers and lakes begin to dry up and water sources are concentrated at watering holes that become hotbeds for animals. Plants, especially grasses, grow more slowly, or not at all, and competition among animals for green foliage increases. The rainy season replenishes the water in Gorongosa’s lakes and rivers, and green, nutritious vegetation is abundant.',
+                bgHeader: 'bg-orange-100 text-orange-900 border-orange-300'
+            },
+            tourism: {
+                id: 'tourism',
+                name: 'Tourism & Infrastructure',
+                badge: 'Economic & Human Impact Scenario',
+                icon: '📷',
+                cardText: 'People from all over the world travel to see African animals, and charismatic animals like lions and elephants are often seen as celebrities. Tourist infrastructure can negatively impact some habitats, but the money that tourism brings is an essential resource for park managers and to support a sustainable economy for communities around the park.',
+                bgHeader: 'bg-emerald-100 text-emerald-900 border-emerald-300'
+            }
+        };
+
+        /**
+         * TROPHIC LEVELS DEFINITION
+         */
+        const TROPHIC_LEVELS = [
+            {
+                id: 'producers',
+                name: 'Primary Producers',
+                examples: 'Grasses, Acacia Trees, Aquatic Vegetation'
+            },
+            {
+                id: 'primary_consumers',
+                name: 'Primary Consumers',
+                examples: 'Zebras, Elephants, Buffalos, Insects'
+            },
+            {
+                id: 'secondary_consumers',
+                name: 'Secondary Consumers',
+                examples: 'Baboons, Small Carnivores, Birds, Amphibians'
+            },
+            {
+                id: 'tertiary_consumers',
+                name: 'Tertiary Consumers',
+                examples: 'Lions, Leopards, Apex Predators'
+            }
+        ];
+
+        /**
+         * APP STATE MANAGEMENT
+         */
+        let currentScenario = 'war';
+
+        let appData = {
+            responses: {
+                war: {},
+                drought: {},
+                tourism: {}
+            }
+        };
+
+        // Initialize App on DOM Ready
+        window.addEventListener('DOMContentLoaded', () => {
+            loadUserData();
+            renderScenarioTabs();
+            renderScenarioCard();
+            renderTrophicTable();
+        });
+
+        /**
+         * LOCAL STORAGE SAVING & LOADING
+         */
+        function saveUserData() {
+            try {
+                localStorage.setItem('gorongosa_slide_canvas_data', JSON.stringify(appData));
+                showSaveIndicator();
+            } catch (e) {
+                console.warn('LocalStorage error:', e);
+            }
+        }
+
+        function loadUserData() {
+            try {
+                const saved = localStorage.getItem('gorongosa_slide_canvas_data');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    appData = Object.assign(appData, parsed);
+                }
+            } catch (e) {
+                console.warn('Parse error:', e);
+            }
+
+            // Ensure schema integrity
+            ['war', 'drought', 'tourism'].forEach(s => {
+                if (!appData.responses[s]) appData.responses[s] = {};
+            });
+        }
+
+        function showSaveIndicator() {
+            const statusEl = document.getElementById('saveStatus');
+            statusEl.classList.remove('opacity-40');
+            setTimeout(() => {
+                statusEl.classList.add('opacity-40');
+            }, 1000);
+        }
+
+        /**
+         * SCENARIO SWITCHING LOGIC
+         */
+        function switchScenario(scenarioId) {
+            currentScenario = scenarioId;
+            renderScenarioTabs();
+            renderScenarioCard();
+            renderTrophicTable();
+        }
+
+        function renderScenarioTabs() {
+            ['war', 'drought', 'tourism'].forEach(id => {
+                const tab = document.getElementById(`tab-${id}`);
+                const isSelected = id === currentScenario;
+
+                if (isSelected) {
+                    tab.className = 'w-full py-2.5 px-4 rounded-lg font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 bg-white text-emerald-900 shadow-sm border border-slate-300';
+                } else {
+                    tab.className = 'w-full py-2.5 px-4 rounded-lg font-bold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100';
+                }
+            });
+        }
+
+        function renderScenarioCard() {
+            const scen = SCENARIOS[currentScenario];
+            const cardEl = document.getElementById('scenarioCard');
+
+            cardEl.innerHTML = `
+                <div class="p-5 sm:p-6 bg-white space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                        <div class="flex items-center gap-2.5">
+                            <span class="text-3xl">${scen.icon}</span>
+                            <div>
+                                <h2 class="text-lg sm:text-xl font-extrabold text-slate-900">${scen.name}</h2>
+                                <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${scen.bgHeader}">
+                                    ${scen.badge}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal">
+                        ${scen.cardText}
+                    </p>
+                </div>
+            `;
+        }
+
+        /**
+         * TROPHIC TABLE RENDER LOGIC
+         */
+        function renderTrophicTable() {
+            const tbody = document.getElementById('trophicTableBody');
+            tbody.innerHTML = '';
+
+            const scenResponses = appData.responses[currentScenario] || {};
+
+            TROPHIC_LEVELS.forEach(level => {
+                const entry = scenResponses[level.id] || { impact: '', reasoning: '' };
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-50/70 transition-colors';
+
+                // Plus / Minus Button Styles
+                const isPlus = entry.impact === '+';
+                const isMinus = entry.impact === '-';
+
+                const plusClass = isPlus 
+                    ? 'bg-[#D4EDDA] text-[#155724] border-2 border-[#C3E6CB] font-bold shadow-sm scale-105' 
+                    : 'bg-slate-100 text-slate-600 border border-slate-200 hover:bg-emerald-50 hover:text-emerald-800';
+
+                const minusClass = isMinus 
+                    ? 'bg-[#F8D7DA] text-[#721C24] border-2 border-[#F5C6CB] font-bold shadow-sm scale-105' 
+                    : 'bg-slate-100 text-slate-600 border border-slate-200 hover:bg-rose-50 hover:text-rose-800';
+
+                tr.innerHTML = `
+                    <td class="py-4 px-4 font-semibold text-slate-900 align-top">
+                        <div class="text-sm font-bold text-slate-800">${level.name}</div>
+                        <div class="text-[11px] font-normal text-slate-500 mt-0.5">${level.examples}</div>
+                    </td>
+                    <td class="py-4 px-4 align-top">
+                        <div class="flex items-center gap-1.5">
+                            <button onclick="setImpact('${level.id}', '+')" class="w-10 h-9 rounded-lg text-base flex items-center justify-center transition-all ${plusClass}" title="Positive Impact (+)">
+                                +
+                            </button>
+                            <button onclick="setImpact('${level.id}', '-')" class="w-10 h-9 rounded-lg text-base flex items-center justify-center transition-all ${minusClass}" title="Negative Impact (-)">
+                                −
+                            </button>
+                            <button onclick="setImpact('${level.id}', '')" class="px-2 py-1.5 rounded text-[10px] text-slate-400 hover:text-slate-600 hover:bg-slate-100" title="Clear Tag">
+                                Clear
+                            </button>
+                        </div>
+                        ${entry.impact ? `<div class="mt-1.5 text-[11px] font-bold ${entry.impact === '+' ? 'text-emerald-700' : 'text-rose-700'}">Selected: ${entry.impact === '+' ? '+ Positive' : '− Negative'}</div>` : ''}
+                    </td>
+                    <td class="py-3 px-4 align-top">
+                        <textarea 
+                            oninput="updateReasoning('${level.id}', this.value)" 
+                            rows="2" 
+                            placeholder="Type prediction & ecological explanation for ${level.name}..." 
+                            class="w-full p-2.5 text-xs sm:text-sm rounded-lg border border-slate-300 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-500 focus:outline-none transition-all bg-white text-slate-800 placeholder-slate-400"
+                        >${entry.reasoning || ''}</textarea>
+                    </td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        /**
+         * USER INTERACTION HANDLERS
+         */
+        function setImpact(trophicId, sign) {
+            if (!appData.responses[currentScenario]) {
+                appData.responses[currentScenario] = {};
+            }
+            if (!appData.responses[currentScenario][trophicId]) {
+                appData.responses[currentScenario][trophicId] = { impact: '', reasoning: '' };
+            }
+
+            appData.responses[currentScenario][trophicId].impact = sign;
+            saveUserData();
+            renderTrophicTable();
+        }
+
+        function updateReasoning(trophicId, text) {
+            if (!appData.responses[currentScenario]) {
+                appData.responses[currentScenario] = {};
+            }
+            if (!appData.responses[currentScenario][trophicId]) {
+                appData.responses[currentScenario][trophicId] = { impact: '', reasoning: '' };
+            }
+
+            appData.responses[currentScenario][trophicId].reasoning = text;
+            saveUserData();
+        }
+
+        /**
+         * EXPORT / CANVAS SUMMARY LOGIC
+         */
+        function openExportModal() {
+            const reportEl = document.getElementById('reportContent');
+            const dateStr = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+
+            let html = `
+                <div class="bg-white p-5 rounded-xl border border-slate-200 space-y-4">
+                    <div class="border-b border-slate-200 pb-3 flex justify-between items-center">
+                        <div>
+                            <h2 class="text-base font-bold text-slate-900">Gorongosa Ecosystem Disruption Summary</h2>
+                            <p class="text-xs text-slate-500">Food Web Disruption Predictions & Reasoning</p>
+                        </div>
+                        <div class="text-right text-xs text-slate-600">
+                            <p><strong>Date:</strong> ${dateStr}</p>
+                        </div>
+                    </div>
+            `;
+
+            Object.keys(SCENARIOS).forEach(scenId => {
+                const scen = SCENARIOS[scenId];
+                const scenData = appData.responses[scenId] || {};
+
+                html += `
+                    <div class="pt-2">
+                        <h3 class="font-bold text-slate-900 text-xs sm:text-sm bg-[#E2EFDA] px-3 py-1.5 rounded border border-[#C6E0B4] flex items-center gap-2">
+                            <span>${scen.icon}</span> ${scen.name}
+                        </h3>
+                        <div class="mt-2 space-y-2">
+                `;
+
+                let count = 0;
+                TROPHIC_LEVELS.forEach(level => {
+                    const entry = scenData[level.id];
+                    if (entry && (entry.impact || entry.reasoning)) {
+                        count++;
+                        const badge = entry.impact === '+' 
+                            ? '<span class="px-2 py-0.5 rounded bg-[#D4EDDA] text-[#155724] font-bold">[ + Positive ]</span>'
+                            : entry.impact === '-' 
+                            ? '<span class="px-2 py-0.5 rounded bg-[#F8D7DA] text-[#721C24] font-bold">[ − Negative ]</span>'
+                            : '<span class="px-2 py-0.5 rounded bg-slate-100 text-slate-500 font-bold">[ No Sign ]</span>';
+
+                        html += `
+                            <div class="p-2.5 bg-slate-50 rounded border border-slate-200 text-xs space-y-1">
+                                <div class="flex items-center justify-between font-semibold">
+                                    <span class="text-slate-900 font-bold">${level.name}</span>
+                                    ${badge}
+                                </div>
+                                <p class="text-slate-700 italic">
+                                    "${entry.reasoning ? escapeHtml(entry.reasoning) : 'No explanation typed.'}"
+                                </p>
+                            </div>
+                        `;
+                    }
+                });
+
+                if (count === 0) {
+                    html += `<p class="text-xs text-slate-400 italic px-2">No responses completed for this scenario yet.</p>`;
+                }
+
+                html += `</div></div>`;
+            });
+
+            html += `</div>`;
+            reportEl.innerHTML = html;
+            document.getElementById('exportModal').classList.remove('hidden');
+        }
+
+        function closeExportModal() {
+            document.getElementById('exportModal').classList.add('hidden');
+        }
+
+        /**
+         * TEXT COPY UTILITY FOR CANVAS SUBMISSION
+         */
+        function copyReportText() {
+            let text = `GORONGOSA ECOSYSTEM DISRUPTION MODEL SUMMARY\n`;
+            text += `Date: ${new Date().toLocaleDateString()}\n`;
+            text += `==============================================\n\n`;
+
+            Object.keys(SCENARIOS).forEach(scenId => {
+                const scen = SCENARIOS[scenId];
+                const scenData = appData.responses[scenId] || {};
+
+                text += `SCENARIO: ${scen.name.toUpperCase()}\n`;
+                text += `----------------------------------------------\n`;
+
+                TROPHIC_LEVELS.forEach(level => {
+                    const entry = scenData[level.id];
+                    if (entry && (entry.impact || entry.reasoning)) {
+                        const tag = entry.impact === '+' ? '[+] POSITIVE' : entry.impact === '-' ? '[-] NEGATIVE' : '[UNTAGGED]';
+                        text += `• ${level.name}: ${tag}\n`;
+                        text += `  Reasoning: ${entry.reasoning || 'None'}\n\n`;
+                    }
+                });
+                text += `\n`;
+            });
+
+            const tempTextarea = document.createElement('textarea');
+            tempTextarea.value = text;
+            tempTextarea.style.position = 'fixed';
+            tempTextarea.style.left = '-9999px';
+            document.body.appendChild(tempTextarea);
+            tempTextarea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast('Summary copied to clipboard! Ready to paste into Canvas.');
+                } else {
+                    showToast('Copy failed. Please select text manually.');
+                }
+            } catch (err) {
+                showToast('Copy error. Please select text manually.');
+            } finally {
+                document.body.removeChild(tempTextarea);
+            }
+        }
+
+        function triggerPrint() {
+            window.print();
+        }
+
+        /**
+         * RESET MODAL HANDLERS
+         */
+        function confirmReset() {
+            document.getElementById('confirmModal').classList.remove('hidden');
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirmModal').classList.add('hidden');
+        }
+
+        function executeReset() {
+            appData.responses = { war: {}, drought: {}, tourism: {} };
+            saveUserData();
+            closeConfirmModal();
+            renderTrophicTable();
+            showToast('All predictions have been reset.');
+        }
+
+        /**
+         * TOAST UTILITY
+         */
+        function showToast(msg) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'bg-slate-900 text-white text-xs font-semibold px-4 py-2.5 rounded-lg shadow-lg pointer-events-auto flex items-center gap-2 transform transition-all duration-300 translate-y-2 opacity-0';
+            toast.innerHTML = `<span>💬</span> <span>${escapeHtml(msg)}</span>`;
+            
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => {
+                    if (container.contains(toast)) container.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
